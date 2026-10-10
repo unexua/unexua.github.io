@@ -1,12 +1,12 @@
 const projects = [
  {id:'kizhi',title:'Кижи',category:'projection',format:'PROJECTION',year:'2026',team:'Sila Sveta'},
- {id:'samosura',title:'Samosura',category:'dome',format:'FULL DOME',year:'2024',team:'Meshsplash',client:'Intervals 2024',behance:'https://www.behance.net/gallery/230852961/SAMOSURA'},
+ {id:'samosura',previewOnly:true,title:'Samosura',category:'dome',format:'FULL DOME',year:'2024',team:'Meshsplash',client:'Intervals 2024',behance:'https://www.behance.net/gallery/230852961/SAMOSURA'},
  {id:'sovremennik',title:'Современник',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
  {id:'vozok',title:'Возок',category:'projection',format:'PROJECTION',year:'2026',team:'Meshsplash'},
  {id:'space-odyssey',title:'Space Odyssey',category:'dome',format:'FULL DOME',year:'2026',team:'Meshsplash',behance:'https://www.behance.net/gallery/248894075/PROJECT-RESONANCE'},
  {id:'moskino',title:'Москино',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
  {id:'coal',title:'История угля',category:'installation',format:'INSTALLATION',year:'2025',team:'Radugadesign × Meshsplash',behance:'https://www.behance.net/gallery/251910929/Museum-of-the-Siberian-Heat'},
- {id:'sevastopol',title:'Севастополь',category:'dome',format:'FULL DOME',year:'2026',team:'Meshsplash',hidden:true}
+ {id:'sevastopol',title:'Севастополь',category:'dome',format:'FULL DOME',year:'2026',team:'Meshsplash',previewOnly:true}
 ].filter(project=>!project.hidden);
 const contributions={
  kizhi:{role:'CG Generalist',cardRole:'CG Generalist · Full cycle',scenes:'full'},
@@ -40,7 +40,12 @@ function openProject(id,trigger){
  stopPreview();
  const p=id==='showreel'?{id:'showreel',title:'Showreel 2025',format:'CG / 3D MOTION',year:'2025',team:'Alexander Fedosov'}:projects.find(p=>p.id===id);
  if(!p)return;activeId=id;if(trigger)lastTrigger=trigger;
- video.pause();video.src=`https://storage.yandexcloud.net/unexua-portfolio-media/${p.id}.mp4`;video.poster=`assets/${p.id}${compactMedia()?'-small':''}.webp`;document.getElementById('video-status').hidden=true;video.load();
+ video.pause();video.removeAttribute('src');video.hidden=!!p.previewOnly;
+ const placeholder=document.getElementById('project-placeholder');placeholder.hidden=!p.previewOnly;
+ const poster=`assets/${p.id}${compactMedia()?'-small':''}.webp`;
+ if(p.previewOnly){placeholder.src=poster;placeholder.alt=`Обложка проекта ${p.title}`;}
+ else{placeholder.removeAttribute('src');video.src=`https://storage.yandexcloud.net/unexua-portfolio-media/${p.id}.mp4`;video.poster=poster;}
+ document.getElementById('video-status').hidden=true;video.load();
  document.getElementById('dialog-title').textContent=p.title;
  document.getElementById('dialog-description').textContent=[`format: ${p.format.toLowerCase().replaceAll(' ','_')} / year: ${p.year}`,p.client?`client: ${p.client}`:'',p.role?`role: ${p.role}`:'',p.contribution?`work: ${p.contribution}`:'',p.scenes?`scenes: ${p.scenes}`:''].filter(Boolean).join('\n');
  document.getElementById('dialog-category').textContent=p.format;

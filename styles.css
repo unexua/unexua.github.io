@@ -293,3 +293,7 @@ body{background:#000;background-attachment:scroll}body:before{display:none}
 .cover{--poster:var(--poster-large)}
 #video-status{padding:12px;font-size:14px;color:#eee}
 @media(max-width:800px){.cover{--poster:var(--poster-small)}.ambient-glitch .noise-region{background-image:url(assets/copy-machine-06-small.webp)}.glitch-slice,.reel-screen .glitch-slice{background-image:url(assets/showreel-small.webp)}}
+
+/* Case covers for projects without full playback. */
+#project-video[hidden],#project-placeholder[hidden]{display:none}
+#project-placeholder{display:block;width:100%;height:67dvh;object-fit:contain;background:#000}
