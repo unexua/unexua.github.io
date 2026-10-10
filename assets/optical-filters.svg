@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg"><filter id="posterize" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="discrete" tableValues="0 .18 .38 .6 .82 1"/><feFuncG type="discrete" tableValues="0 .18 .38 .6 .82 1"/><feFuncB type="discrete" tableValues="0 .18 .38 .6 .82 1"/></feComponentTransfer></filter></svg>
