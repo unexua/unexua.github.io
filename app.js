@@ -6,8 +6,8 @@ const projects = [
  {id:'space-odyssey',title:'Space Odyssey',category:'dome',format:'FULL DOME',year:'2026',team:'Meshsplash',behance:'https://www.behance.net/gallery/248894075/PROJECT-RESONANCE'},
  {id:'moskino',title:'Москино',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
  {id:'coal',title:'История угля',category:'installation',format:'INSTALLATION',year:'2025',team:'Radugadesign × Meshsplash',behance:'https://www.behance.net/gallery/251910929/Museum-of-the-Siberian-Heat'},
- {id:'sevastopol',title:'Севастополь',category:'dome',format:'FULL DOME',year:'2026',team:'Meshsplash'}
-];
+ {id:'sevastopol',title:'Севастополь',category:'dome',format:'FULL DOME',year:'2026',team:'Meshsplash',hidden:true}
+].filter(project=>!project.hidden);
 const contributions={
  kizhi:{role:'CG Generalist',cardRole:'CG Generalist · Full cycle',scenes:'full'},
  samosura:{role:'CG Generalist',scenes:'01:50–03:15'},
@@ -46,7 +46,7 @@ function openProject(id,trigger){
  document.getElementById('dialog-category').textContent=p.format;
  document.getElementById('dialog-year').textContent=`year: ${p.year}`;
  document.getElementById('dialog-team').textContent=`studio: ${p.team}`;
- document.getElementById('dialog-position').textContent=id==='showreel'?'SHOWREEL / 00:29':`${String(projects.indexOf(p)+1).padStart(3,'0')} / 008`;
+ document.getElementById('dialog-position').textContent=id==='showreel'?'SHOWREEL / 00:29':`${String(projects.indexOf(p)+1).padStart(3,'0')} / ${String(projects.length).padStart(3,'0')}`;
  document.getElementById('next-project').hidden=id==='showreel';
  if(!dialog.open){dialog.showModal();document.body.style.overflow='hidden';}heroVideo.pause();
 }
