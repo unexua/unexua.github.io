@@ -297,3 +297,19 @@ body{background:#000;background-attachment:scroll}body:before{display:none}
 /* Case covers for projects without full playback. */
 #project-video[hidden],#project-placeholder[hidden]{display:none}
 #project-placeholder{display:block;width:100%;height:67dvh;object-fit:contain;background:#000}
+
+/* Sandbox information, three-column work index and sharing controls. */
+@media(min-width:900px){.project-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.artist-data dt{font-size:13px;color:#a8a8a8}.artist-data dd{font-size:14px;line-height:1.65}.artist-data>div{grid-template-columns:72px minmax(0,1fr)}
+.artist-contact{font-size:13px;gap:8px;flex-wrap:wrap}.artist-info{align-self:stretch}
+.project-team{font-size:14px}.project-role{font-size:14px;line-height:1.5}.project-meta{gap:10px;line-height:1.6}
+.project-resources{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:12px}.project-permalink{color:#ccc}.project-resources .project-behance{margin-left:auto}
+.copy-button{font-family:inherit;font-size:12px;line-height:1.5;color:#aaa;border:0;background:none;padding:5px 0;white-space:nowrap}.copy-button:hover,.copy-button:focus-visible,.project-permalink:hover{color:#fff}
+.copy-button:focus-visible{outline:1px solid #aaa;outline-offset:4px}
+.contact-item{display:flex;align-items:center;gap:12px;min-width:0}.contact-item>a{display:flex;align-items:center;gap:12px;flex:1;min-width:0;padding:4px 0}.contact-item>a>svg{width:18px;height:18px;flex:none}.contact-item>a>span:nth-child(2){display:flex;flex-direction:column;font-size:15px;line-height:1.5;min-width:0}.contact-item .muted{font-size:14px;overflow-wrap:anywhere}.contact-item>a>span:last-child{margin-left:auto}.contact-item .copy-button{flex:none}
+.copy-feedback{position:fixed;right:20px;bottom:20px;z-index:100;padding:12px 18px;background:#111;border:1px solid #777;color:#fff;font-size:14px}.clipboard-fallback{position:fixed;left:-9999px;top:0}
+@media(max-width:650px){.artist-data dt{font-size:13px}.artist-data dd,.project-team,.project-role{font-size:13px}.contact-item{flex-wrap:wrap;gap:5px 12px}.project-resources{gap:8px}}
+
+@media(min-width:1100px){.hero{grid-template-columns:260px minmax(0,1fr)}.artist-data{gap:12px}.artist-data dd{line-height:1.5}}
+
+.project-navigation{display:flex;gap:10px}.project-navigation[hidden]{display:none}.dialog-bottom .project-navigation button{font-size:24px;line-height:1;width:44px;height:40px;padding:6px;border:1px solid #ffffff35}.project-navigation button:hover,.project-navigation button:focus-visible{background:#eee;color:#000}.project-resources .project-behance{margin-left:0}
