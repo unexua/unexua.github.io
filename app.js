@@ -25,17 +25,17 @@ const compactMedia=()=>matchMedia('(max-width: 800px)').matches||!!navigator.con
 const coverDimensions={"sovremennik":{"height":1920,"width":3780},"vozok":{"height":2160,"width":3840},"kizhi":{"height":2048,"width":6824},"showreel":{"height":900,"width":1600},"bosideng":{"height":2350,"width":4000},"samosura":{"height":4096,"width":4096},"coal":{"height":1308,"width":1988},"space-odyssey":{"height":4096,"width":4096},"moskino":{"height":2160,"width":3660}};
 const grid=document.getElementById('project-grid');
 const coverNames={bosideng:'BOSIDENG',kizhi:'KIZHI',samosura:'SAMOSURA',sovremennik:'SOVREMENNIK',vozok:'VOZOK','space-odyssey':'SPACE ODYSSEY',moskino:'MOSKINO',coal:'HISTORY OF COAL',sevastopol:'SEVASTOPOL'};
-grid.innerHTML=projects.map((p,i)=>`<article class="project" data-category="${p.category}" data-id="${p.id}" data-glitch="${['bands','scan'][i%2]}"><button class="project-link" type="button" data-open="${p.id}" aria-label="Открыть проект ${p.title}"><div class="project-image cover" style="--poster-large:url(https://storage.yandexcloud.net/unexua-portfolio-media/20261012-cases-hq-${p.id}.webp);--poster-small:url(https://storage.yandexcloud.net/unexua-portfolio-media/20261012-cases-hq-${p.id}.webp)"><img class="cover-art" src="https://storage.yandexcloud.net/unexua-portfolio-media/20261012-cases-hq-${p.id}.webp" decoding="async" alt="Обложка проекта ${p.title}" loading="lazy" width="${coverDimensions[p.id].width}" height="${coverDimensions[p.id].height}"><span class="project-glitch slice-one" aria-hidden="true"></span><span class="project-glitch slice-two" aria-hidden="true"></span><span class="media-grain" aria-hidden="true"></span><span class="media-scanline" aria-hidden="true"></span><div class="cover-header" aria-hidden="true"><span class="cover-id">[ ${String(i+1).padStart(3,'0')} ]</span><span class="cover-format">${p.format.replace(' ','_')}</span>${(p.tags||[]).map(tag=>`<span class="cover-format cover-tag">/ ${tag}</span>`).join('')}<span class="cover-year">${p.year}</span></div><div class="cover-guide" aria-hidden="true"><span>+</span><span>+</span></div><div class="cover-caption"><span class="cover-file" aria-hidden="true">ID /</span><h3 class="glitch-text" aria-label="${p.title}" data-text="${coverNames[p.id]}">${coverNames[p.id]}</h3><div class="cover-bottom" aria-hidden="true"><span class="cover-bars"></span><span class="cover-play">${['space-odyssey','samosura'].includes(p.id)?'[ 360° PREVIEW ↗ ]':p.previewOnly?'[ PREVIEW ↗ ]':'[ PLAY ↗ ]'}</span></div></div></div></button><div class="project-meta"><span class="project-team">${p.team}${p.client?` × ${p.client}`:""}</span>${p.role?`<span class="project-role">${p.cardRole||p.role}</span>`:""}</div>${p.behance?`<div class="project-resources"><a class="project-behance" href="${p.behance}" target="_blank" rel="noopener noreferrer" aria-label="${p.title} на Behance"><svg aria-hidden="true"><use href="#icon-behance"></use></svg><span>Behance ↗</span></a></div>`:""}</article>`).join('');
+grid.innerHTML=projects.map((p,i)=>`<article class="project" data-category="${p.category}" data-id="${p.id}" data-glitch="${['bands','scan'][i%2]}"><button class="project-link" type="button" data-open="${p.id}" aria-label="Открыть проект ${p.title}"><div class="project-image cover" style="--poster-large:url(https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-cover-${p.id}${p.id==='kizhi'?'-master':''}-1600.webp);--poster-small:url(https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-cover-${p.id}${p.id==='kizhi'?'-master':''}-1600.webp)"><img class="cover-art" src="https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-cover-${p.id}${p.id==='kizhi'?'-master':''}-1024.webp" srcset="https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-cover-${p.id}${p.id==='kizhi'?'-master':''}-1024.webp 1024w, https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-cover-${p.id}${p.id==='kizhi'?'-master':''}-1600.webp 1600w" sizes="(max-width: 650px) 50vw, 25vw" decoding="async" alt="Обложка проекта ${p.title}" loading="lazy" width="${coverDimensions[p.id].width}" height="${coverDimensions[p.id].height}"><span class="project-glitch slice-one" aria-hidden="true"></span><span class="project-glitch slice-two" aria-hidden="true"></span><span class="media-grain" aria-hidden="true"></span><span class="media-scanline" aria-hidden="true"></span><div class="cover-header" aria-hidden="true"><span class="cover-id">[ ${String(i+1).padStart(3,'0')} ]</span><span class="cover-format">${p.format.replace(' ','_')}</span>${(p.tags||[]).map(tag=>`<span class="cover-format cover-tag">/ ${tag}</span>`).join('')}<span class="cover-year">${p.year}</span></div><div class="cover-guide" aria-hidden="true"><span>+</span><span>+</span></div><div class="cover-caption"><span class="cover-file" aria-hidden="true">ID /</span><h3 class="glitch-text" aria-label="${p.title}" data-text="${coverNames[p.id]}">${coverNames[p.id]}</h3><div class="cover-bottom" aria-hidden="true"><span class="cover-bars"></span><span class="cover-play">${['space-odyssey','samosura'].includes(p.id)?'[ 360° PREVIEW ↗ ]':p.previewOnly?'[ PREVIEW ↗ ]':'[ PLAY ↗ ]'}</span></div></div></div></button><div class="project-meta"><span class="project-team">${p.team}${p.client?` × ${p.client}`:""}</span>${p.role?`<span class="project-role">${p.cardRole||p.role}</span>`:""}</div>${p.behance?`<div class="project-resources"><a class="project-behance" href="${p.behance}" target="_blank" rel="noopener noreferrer" aria-label="${p.title} на Behance"><svg aria-hidden="true"><use href="#icon-behance"></use></svg><span>Behance ↗</span></a></div>`:""}</article>`).join('');
 
 const dialog=document.getElementById('project-dialog'),video=document.getElementById('project-video'),heroVideo=document.getElementById('hero-video'),motionToggle=document.getElementById('motion-toggle');
 const qualityControl=document.getElementById('video-quality'),qualitySelect=document.getElementById('video-quality-select');
-const showreelQualitySources={'2160':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-media-showreel-2026-r2.mp4','1080':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-media-showreel-2026-r2-1080.mp4','720':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-media-showreel-2026-r2-720.mp4'};
+const showreelQualitySources={'2160-max':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-max.mp4','2160':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-4k.mp4','1080':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-1080.mp4','720':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-720.mp4'};
 let qualityChangeController=null,activeQualitySources={};
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-heroVideo.src='https://storage.yandexcloud.net/unexua-portfolio-media/20261012-hero-2026-r2-hq.mp4';
-heroVideo.poster=`assets/showreel-2026-r2${compactMedia()?'-small':''}.webp`;
-let activeId=null,lastTrigger=null,backgroundPaused=reduced.matches||!!navigator.connection?.saveData,heroVisible=true;
-function syncMotion(){motionToggle.setAttribute('aria-pressed',String(backgroundPaused));motionToggle.textContent=backgroundPaused?'PLAY ▶':'PAUSE Ⅱ';if(backgroundPaused||dialog.open||document.hidden||!heroVisible)heroVideo.pause();else heroVideo.play().catch(()=>{});}
+heroVideo.src=heroVideo.clientWidth*devicePixelRatio>1920?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-hero-master-2560.mp4':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-hero-master-1080.mp4';
+heroVideo.poster='https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-poster.webp';
+let activeId=null,lastTrigger=null,backgroundPaused=reduced.matches||!!navigator.connection?.saveData,heroVisible=true,hoverActive=false;
+function syncMotion(){motionToggle.setAttribute('aria-pressed',String(backgroundPaused));motionToggle.textContent=backgroundPaused?'PLAY ▶':'PAUSE Ⅱ';if(backgroundPaused||dialog.open||document.hidden||!heroVisible||hoverActive)heroVideo.pause();else heroVideo.play().catch(()=>{});}
 syncMotion();
 motionToggle.addEventListener('click',()=>{backgroundPaused=!backgroundPaused;syncMotion();});
 reduced.addEventListener('change',e=>{backgroundPaused=e.matches;syncMotion();});
@@ -46,7 +46,7 @@ function openProject(id,trigger,updateUrl=true){
  const p=id==='showreel'?{id:'showreel',title:'Showreel 2026',format:'CG / 3D MOTION',year:'2026',team:'Alexander Fedosov',videoSrc:showreelQualitySources['2160']}:projects.find(p=>p.id===id);
  if(!p)return;
  qualityChangeController?.abort();qualityChangeController=null;
- const choices=p.previewOnly?[]:id==='showreel'?[{value:'2160',label:'4K / original',src:showreelQualitySources['2160']},{value:'1080',label:'1080p',src:showreelQualitySources['1080']},{value:'720',label:'720p',src:showreelQualitySources['720']}]:window.PORTFOLIO_VIDEO_QUALITIES?.[id]||[];
+ const choices=p.previewOnly?[]:id==='showreel'?[{value:'2160',label:'4K / web',src:showreelQualitySources['2160']},{value:'2160-max',label:'4K / max quality',src:showreelQualitySources['2160-max']},{value:'1080',label:'1080p',src:showreelQualitySources['1080']},{value:'720',label:'720p',src:showreelQualitySources['720']}]:window.PORTFOLIO_VIDEO_QUALITIES?.[id]||[];
  activeQualitySources=Object.fromEntries(choices.map(choice=>[choice.value,choice.src]));
  qualitySelect.replaceChildren(...choices.map(choice=>new Option(choice.label,choice.value)));
  qualityControl.hidden=p.previewOnly||choices.length<2;
@@ -56,7 +56,7 @@ function openProject(id,trigger,updateUrl=true){
  activeId=id;if(trigger)lastTrigger=trigger;
  video.pause();video.removeAttribute('src');video.hidden=!!p.previewOnly;
  const placeholder=document.getElementById('project-placeholder');placeholder.hidden=!p.previewOnly;
- const poster=id==='showreel'?`assets/showreel-2026-r2${compactMedia()?'-small':''}.webp`:`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-cases-hq-${p.id}.webp`;
+ const poster=id==='kizhi'?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-cover-kizhi-native-master.webp':id==='showreel'?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-poster.webp':`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-cases-hq-${p.id}.webp`;
  if(p.previewOnly){placeholder.src=poster;placeholder.alt=`Обложка проекта ${p.title}`;}
  else{placeholder.removeAttribute('src');video.src=p.videoSrc||`https://storage.yandexcloud.net/unexua-portfolio-media/${p.id}.mp4`;video.poster=poster;}
  document.getElementById('video-status').hidden=true;video.load();
@@ -115,29 +115,32 @@ dialog.addEventListener('close',syncAmbient);
 new MutationObserver(syncAmbient).observe(dialog,{attributes:true,attributeFilter:['open']});
 
 // One shared decoder; short, silent previews load only on deliberate hover/focus.
-const previewPointer=matchMedia('(hover: hover) and (pointer: fine)');
+const previewPointer=matchMedia('(any-hover: hover) and (any-pointer: fine)');
 const hoverPreview=document.createElement('video');
 hoverPreview.className='hover-preview';hoverPreview.muted=true;hoverPreview.defaultMuted=true;
-hoverPreview.playsInline=true;hoverPreview.preload='none';hoverPreview.setAttribute('aria-hidden','true');hoverPreview.setAttribute('tabindex','-1');
-let previewSurface=null,previewDelay=null;
-function stopPreview(){
+hoverPreview.playsInline=true;hoverPreview.preload='auto';hoverPreview.setAttribute('aria-hidden','true');hoverPreview.setAttribute('tabindex','-1');
+let previewSurface=null,previewDelay=null,previewGeneration=0;
+function stopPreview(resumeHero=true){
+ previewGeneration++;hoverActive=false;
  clearTimeout(previewDelay);previewDelay=null;
  previewSurface?.classList.remove('previewing');previewSurface=null;
  hoverPreview.pause();hoverPreview.removeAttribute('src');hoverPreview.load();hoverPreview.remove();
+ if(resumeHero)syncMotion();
 }
 function startPreview(surface){
- if(navigator.connection?.saveData||!previewPointer.matches||reduced.matches||dialog.open||document.hidden||previewSurface===surface)return;
- stopPreview();previewSurface=surface;
+ if(navigator.connection?.saveData||!previewPointer.matches||dialog.open||document.hidden||previewSurface===surface)return;
+ stopPreview(false);previewSurface=surface;hoverActive=true;syncMotion();
+ const generation=previewGeneration;
  previewDelay=setTimeout(()=>{
-  if(previewSurface!==surface)return;
+  if(previewSurface!==surface||generation!==previewGeneration)return;
   surface.querySelector('.project-image').append(hoverPreview);
-  hoverPreview.src=`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-previews-hq-${surface.dataset.id}.mp4`;
-  hoverPreview.play().catch(()=>{if(previewSurface===surface)stopPreview();});
+  hoverPreview.src=`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-preview-${surface.dataset.id}${surface.dataset.id==='kizhi'?'-master':''}.mp4`;
+  hoverPreview.play().catch(()=>{if(previewSurface===surface&&generation===previewGeneration)stopPreview();});
  },180);
 }
-hoverPreview.addEventListener('playing',()=>previewSurface?.classList.add('previewing'));
+hoverPreview.addEventListener('playing',()=>{if(hoverPreview.readyState>=2)previewSurface?.classList.add('previewing');});
 hoverPreview.addEventListener('ended',stopPreview);
-hoverPreview.addEventListener('error',stopPreview);
+hoverPreview.addEventListener('error',()=>{if(hoverPreview.error)stopPreview();});
 document.querySelectorAll('.project').forEach(surface=>{
  surface.addEventListener('pointerenter',()=>startPreview(surface));
  surface.addEventListener('pointerleave',()=>{if(previewSurface===surface)stopPreview();});
@@ -145,7 +148,7 @@ document.querySelectorAll('.project').forEach(surface=>{
  surface.addEventListener('focusout',e=>{if(!surface.contains(e.relatedTarget)&&previewSurface===surface)stopPreview();});
 });
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stopPreview();});
-reduced.addEventListener('change',()=>{if(reduced.matches)stopPreview();});
+// Deliberate hover previews remain available; reduced motion still pauses ambient effects.
 document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',stopPreview));
 
 video.addEventListener('error',()=>{const status=document.getElementById('video-status');status.textContent='Не удалось загрузить видео. Проверь соединение и открой проект ещё раз.';status.hidden=false;});
