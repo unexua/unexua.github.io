@@ -1,13 +1,13 @@
 const projects = [
- {id:'kizhi',title:'Кижи',category:'projection',format:'PROJECTION',year:'2026',team:'Sila Sveta'},
- {id:'samosura',previewOnly:true,title:'Samosura',category:'dome',format:'FULL DOME',year:'2024',team:'Meshsplash',client:'Intervals 2024',behance:'https://www.behance.net/gallery/230852961/SAMOSURA'},
- {id:'sovremennik',title:'Современник',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
- {id:'vozok',title:'Возок',category:'projection',format:'PROJECTION',year:'2026',team:'Meshsplash'},
- {id:'space-odyssey',title:'Space Odyssey',category:'dome',format:'FULL DOME',year:'2026',team:'Meshsplash',behance:'https://www.behance.net/gallery/248894075/PROJECT-RESONANCE'},
- {id:'moskino',title:'Москино',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
+ {id:'kizhi',previewOnly:true,title:'Кижи',category:'projection',format:'PROJECTION',year:'2026',team:'Sila Sveta'},
  {id:'coal',title:'История угля',category:'installation',format:'INSTALLATION',year:'2025',team:'Radugadesign × Meshsplash',behance:'https://www.behance.net/gallery/251910929/Museum-of-the-Siberian-Heat'},
- {id:'sevastopol',title:'Севастополь',category:'dome',format:'FULL DOME',year:'2026',team:'Meshsplash',previewOnly:true},
- {id:'bosideng',previewOnly:true,title:'Bosideng',category:'projection',format:'PROJECTION',year:'2026',team:'Radugadesign × Meshsplash'}
+ {id:'sovremennik',title:'Современник',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
+ {id:'space-odyssey',title:'Space Odyssey',category:'dome',format:'FULLDOME',year:'2026',team:'Meshsplash',behance:'https://www.behance.net/gallery/248894075/PROJECT-RESONANCE'},
+ {id:'vozok',tags:['AI'],title:'Возок',category:'projection',format:'PROJECTION',year:'2026',team:'Meshsplash'},
+ {id:'moskino',title:'Москино',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
+ {id:'samosura',videoSrc:'media/samosura-restored.mp4',title:'Samosura',category:'dome',format:'FULLDOME',year:'2024',team:'Meshsplash',client:'Intervals 2024',behance:'https://www.behance.net/gallery/230852961/SAMOSURA'},
+ {id:'bosideng',previewOnly:true,videoSrc:'media/bosideng-restored.mp4',tags:['AI'],title:'Bosideng',category:'projection',format:'PROJECTION',year:'2026',team:'Radugadesign × Meshsplash'},
+ {id:'sevastopol',hidden:true,title:'Севастополь',category:'dome',format:'FULLDOME',year:'2026',team:'Meshsplash',previewOnly:true}
 ].filter(project=>!project.hidden);
 const contributions={
  bosideng:{role:'CG Generalist',cardRole:'CG Generalist · Full cycle',scope:'FULL CYCLE / AI → ASSEMBLY',scenes:'full',contribution:'Полное производство ролика: генерация с помощью нейросетей и последующая сборка.'},
@@ -20,17 +20,20 @@ const contributions={
  coal:{role:'CG Generalist',cardRole:'CG Generalist · Full cycle',scope:'FULL CYCLE / 3D → COMPOSITING',scenes:'full',contribution:'Полная сборка: от 3D до композитинга.'},
  sevastopol:{role:'CG Generalist / CG Supervisor'}
 };
-projects.forEach(p=>Object.assign(p,contributions[p.id]||{}));
+projects.forEach(p=>{Object.assign(p,contributions[p.id]||{});p.videoSrc=`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-media-originals-${p.id}.mp4`;});
 const compactMedia=()=>matchMedia('(max-width: 800px)').matches||!!navigator.connection?.saveData||/^(slow-2g|2g|3g)$/.test(navigator.connection?.effectiveType||'');
-const coverDimensions={"bosideng":{"width":1600,"height":940},"kizhi":{"width":1600,"height":480},"samosura":{"width":1600,"height":1600},"sovremennik":{"width":1600,"height":813},"vozok":{"width":1600,"height":900},"space-odyssey":{"width":1600,"height":1600},"moskino":{"width":1600,"height":944},"coal":{"width":1600,"height":1053},"sevastopol":{"width":1600,"height":1600},"showreel":{"width":1600,"height":900}};
+const coverDimensions={"sovremennik":{"height":1920,"width":3780},"vozok":{"height":2160,"width":3840},"kizhi":{"height":2048,"width":6824},"showreel":{"height":900,"width":1600},"bosideng":{"height":2350,"width":4000},"samosura":{"height":4096,"width":4096},"coal":{"height":1308,"width":1988},"space-odyssey":{"height":4096,"width":4096},"moskino":{"height":2160,"width":3660}};
 const grid=document.getElementById('project-grid');
 const coverNames={bosideng:'BOSIDENG',kizhi:'KIZHI',samosura:'SAMOSURA',sovremennik:'SOVREMENNIK',vozok:'VOZOK','space-odyssey':'SPACE ODYSSEY',moskino:'MOSKINO',coal:'HISTORY OF COAL',sevastopol:'SEVASTOPOL'};
-grid.innerHTML=projects.map((p,i)=>`<article class="project" data-category="${p.category}" data-id="${p.id}" data-glitch="${['bands','scan'][i%2]}"><button class="project-link" type="button" data-open="${p.id}" aria-label="Открыть проект ${p.title}"><div class="project-image cover" style="--poster-large:url(assets/${p.id}.webp);--poster-small:url(assets/${p.id}-small.webp)"><img class="cover-art" src="assets/${p.id}-small.webp" srcset="assets/${p.id}-small.webp 800w, assets/${p.id}.webp 1600w" sizes="(min-width:900px) 33vw, (min-width:371px) 50vw, 100vw" decoding="async" alt="Обложка проекта ${p.title}" loading="lazy" width="${coverDimensions[p.id].width}" height="${coverDimensions[p.id].height}"><span class="project-glitch slice-one" aria-hidden="true"></span><span class="project-glitch slice-two" aria-hidden="true"></span><span class="media-grain" aria-hidden="true"></span><span class="media-scanline" aria-hidden="true"></span><div class="cover-header" aria-hidden="true"><span class="cover-id">[ ${String(i+1).padStart(3,'0')} ]</span><span class="cover-format">${p.format.replace(' ','_')}</span><span class="cover-year">${p.year}</span></div><div class="cover-guide" aria-hidden="true"><span>+</span><span>+</span></div><div class="cover-caption"><span class="cover-file" aria-hidden="true">ID /</span><h3 class="glitch-text" aria-label="${p.title}" data-text="${coverNames[p.id]}">${coverNames[p.id]}</h3><div class="cover-bottom" aria-hidden="true"><span class="cover-bars"></span><span class="cover-play">[ PLAY ↗ ]</span></div></div></div></button><div class="project-meta"><span class="project-team">${p.team}${p.client?` × ${p.client}`:""}</span>${p.role?`<span class="project-role">${p.cardRole||p.role}</span>`:""}</div>${p.behance?`<div class="project-resources"><a class="project-behance" href="${p.behance}" target="_blank" rel="noopener noreferrer" aria-label="${p.title} на Behance"><svg aria-hidden="true"><use href="#icon-behance"></use></svg><span>Behance ↗</span></a></div>`:""}</article>`).join('');
+grid.innerHTML=projects.map((p,i)=>`<article class="project" data-category="${p.category}" data-id="${p.id}" data-glitch="${['bands','scan'][i%2]}"><button class="project-link" type="button" data-open="${p.id}" aria-label="Открыть проект ${p.title}"><div class="project-image cover" style="--poster-large:url(https://storage.yandexcloud.net/unexua-portfolio-media/20261012-cases-hq-${p.id}.webp);--poster-small:url(https://storage.yandexcloud.net/unexua-portfolio-media/20261012-cases-hq-${p.id}.webp)"><img class="cover-art" src="https://storage.yandexcloud.net/unexua-portfolio-media/20261012-cases-hq-${p.id}.webp" decoding="async" alt="Обложка проекта ${p.title}" loading="lazy" width="${coverDimensions[p.id].width}" height="${coverDimensions[p.id].height}"><span class="project-glitch slice-one" aria-hidden="true"></span><span class="project-glitch slice-two" aria-hidden="true"></span><span class="media-grain" aria-hidden="true"></span><span class="media-scanline" aria-hidden="true"></span><div class="cover-header" aria-hidden="true"><span class="cover-id">[ ${String(i+1).padStart(3,'0')} ]</span><span class="cover-format">${p.format.replace(' ','_')}</span>${(p.tags||[]).map(tag=>`<span class="cover-format cover-tag">/ ${tag}</span>`).join('')}<span class="cover-year">${p.year}</span></div><div class="cover-guide" aria-hidden="true"><span>+</span><span>+</span></div><div class="cover-caption"><span class="cover-file" aria-hidden="true">ID /</span><h3 class="glitch-text" aria-label="${p.title}" data-text="${coverNames[p.id]}">${coverNames[p.id]}</h3><div class="cover-bottom" aria-hidden="true"><span class="cover-bars"></span><span class="cover-play">${['space-odyssey','samosura'].includes(p.id)?'[ 360° PREVIEW ↗ ]':p.previewOnly?'[ PREVIEW ↗ ]':'[ PLAY ↗ ]'}</span></div></div></div></button><div class="project-meta"><span class="project-team">${p.team}${p.client?` × ${p.client}`:""}</span>${p.role?`<span class="project-role">${p.cardRole||p.role}</span>`:""}</div>${p.behance?`<div class="project-resources"><a class="project-behance" href="${p.behance}" target="_blank" rel="noopener noreferrer" aria-label="${p.title} на Behance"><svg aria-hidden="true"><use href="#icon-behance"></use></svg><span>Behance ↗</span></a></div>`:""}</article>`).join('');
 
 const dialog=document.getElementById('project-dialog'),video=document.getElementById('project-video'),heroVideo=document.getElementById('hero-video'),motionToggle=document.getElementById('motion-toggle');
+const qualityControl=document.getElementById('video-quality'),qualitySelect=document.getElementById('video-quality-select');
+const showreelQualitySources={'2160':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-media-showreel-2026-r2.mp4','1080':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-media-showreel-2026-r2-1080.mp4','720':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-media-showreel-2026-r2-720.mp4'};
+let qualityChangeController=null,activeQualitySources={};
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-heroVideo.src=(matchMedia('(max-width: 800px)').matches||navigator.connection?.saveData)?'assets/hero-mobile.mp4':'https://storage.yandexcloud.net/unexua-portfolio-media/hero-hq-4k.mp4';
-heroVideo.poster=`assets/showreel${compactMedia()?'-small':''}.webp`;
+heroVideo.src='https://storage.yandexcloud.net/unexua-portfolio-media/20261012-hero-2026-r2-hq.mp4';
+heroVideo.poster=`assets/showreel-2026-r2${compactMedia()?'-small':''}.webp`;
 let activeId=null,lastTrigger=null,backgroundPaused=reduced.matches||!!navigator.connection?.saveData,heroVisible=true;
 function syncMotion(){motionToggle.setAttribute('aria-pressed',String(backgroundPaused));motionToggle.textContent=backgroundPaused?'PLAY ▶':'PAUSE Ⅱ';if(backgroundPaused||dialog.open||document.hidden||!heroVisible)heroVideo.pause();else heroVideo.play().catch(()=>{});}
 syncMotion();
@@ -40,13 +43,20 @@ document.addEventListener('visibilitychange',syncMotion);
 const heroObserver=new IntersectionObserver(entries=>{heroVisible=entries[0].isIntersecting;syncMotion();},{threshold:.08});heroObserver.observe(document.querySelector('.hero'));
 function openProject(id,trigger,updateUrl=true){
  stopPreview();
- const p=id==='showreel'?{id:'showreel',title:'Showreel 2025',format:'CG / 3D MOTION',year:'2025',team:'Alexander Fedosov'}:projects.find(p=>p.id===id);
+ const p=id==='showreel'?{id:'showreel',title:'Showreel 2026',format:'CG / 3D MOTION',year:'2026',team:'Alexander Fedosov',videoSrc:showreelQualitySources['2160']}:projects.find(p=>p.id===id);
  if(!p)return;
+ qualityChangeController?.abort();qualityChangeController=null;
+ const choices=p.previewOnly?[]:id==='showreel'?[{value:'2160',label:'4K / original',src:showreelQualitySources['2160']},{value:'1080',label:'1080p',src:showreelQualitySources['1080']},{value:'720',label:'720p',src:showreelQualitySources['720']}]:window.PORTFOLIO_VIDEO_QUALITIES?.[id]||[];
+ activeQualitySources=Object.fromEntries(choices.map(choice=>[choice.value,choice.src]));
+ qualitySelect.replaceChildren(...choices.map(choice=>new Option(choice.label,choice.value)));
+ qualityControl.hidden=p.previewOnly||choices.length<2;
+ if(choices.length){qualitySelect.value=choices[0].value;p.videoSrc=choices[0].src;}
+ if(['space-odyssey','samosura'].includes(id))video.crossOrigin='anonymous';else video.removeAttribute('crossorigin');
  if(updateUrl&&location.hash!==`#project/${id}`)history.pushState(null,'',`#project/${id}`);
  activeId=id;if(trigger)lastTrigger=trigger;
  video.pause();video.removeAttribute('src');video.hidden=!!p.previewOnly;
  const placeholder=document.getElementById('project-placeholder');placeholder.hidden=!p.previewOnly;
- const poster=`assets/${p.id}${compactMedia()?'-small':''}.webp`;
+ const poster=id==='showreel'?`assets/showreel-2026-r2${compactMedia()?'-small':''}.webp`:`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-cases-hq-${p.id}.webp`;
  if(p.previewOnly){placeholder.src=poster;placeholder.alt=`Обложка проекта ${p.title}`;}
  else{placeholder.removeAttribute('src');video.src=p.videoSrc||`https://storage.yandexcloud.net/unexua-portfolio-media/${p.id}.mp4`;video.poster=poster;}
  document.getElementById('video-status').hidden=true;video.load();
@@ -59,11 +69,28 @@ function openProject(id,trigger,updateUrl=true){
  document.getElementById('share-project').dataset.share=id;
  document.getElementById('project-navigation').hidden=id==='showreel';
  if(!dialog.open){dialog.showModal();document.body.style.overflow='hidden';}heroVideo.pause();
+ window.portfolioPanorama?.setActive(['space-odyssey','samosura'].includes(id));
 }
+qualitySelect.addEventListener('change',()=>{
+ if(!dialog.open)return;
+ const projectId=activeId,source=activeQualitySources[qualitySelect.value];if(!source)return;
+ const position=qualityChangeController?.position??video.currentTime,wasPlaying=qualityChangeController?.wasPlaying??(!video.paused&&!video.ended),rate=qualityChangeController?.rate??video.playbackRate;
+ qualityChangeController?.abort();
+ const controller=new AbortController();controller.wasPlaying=wasPlaying;controller.position=position;controller.rate=rate;qualityChangeController=controller;
+ video.pause();document.getElementById('video-status').hidden=true;
+ video.addEventListener('loadedmetadata',()=>{
+  if(controller.signal.aborted||activeId!==projectId||!dialog.open)return;
+  video.playbackRate=rate;
+  const resume=()=>{if(!controller.signal.aborted&&activeId===projectId&&dialog.open){qualityChangeController=null;if(wasPlaying)video.play().catch(()=>{});}};
+  const target=Math.min(position,Math.max(0,video.duration-.05));
+  if(target>.01){video.addEventListener('seeked',resume,{once:true,signal:controller.signal});video.currentTime=target;}else resume();
+ },{once:true,signal:controller.signal});
+ video.src=source;video.load();
+});
 document.addEventListener('click',e=>{const trigger=e.target.closest('[data-open]');if(trigger)openProject(trigger.dataset.open,trigger);});
 document.querySelector('.close-dialog').addEventListener('click',()=>dialog.close());
 dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
-dialog.addEventListener('close',()=>{if(location.hash.startsWith('#project/'))history.replaceState(null,'','#work');video.pause();video.removeAttribute('src');video.load();document.body.style.overflow='';syncMotion();lastTrigger?.focus({preventScroll:true});});
+dialog.addEventListener('close',()=>{qualityChangeController?.abort();qualityChangeController=null;window.portfolioPanorama?.setActive(false);if(location.hash.startsWith('#project/'))history.replaceState(null,'','#work');video.pause();video.removeAttribute('src');video.load();document.body.style.overflow='';syncMotion();lastTrigger?.focus({preventScroll:true});});
 function stepProject(direction){const index=projects.findIndex(p=>p.id===activeId);if(index<0)return;openProject(projects[(index+direction+projects.length)%projects.length].id);}
 document.getElementById('previous-project').addEventListener('click',()=>stepProject(-1));
 document.getElementById('next-project').addEventListener('click',()=>stepProject(1));
@@ -104,7 +131,7 @@ function startPreview(surface){
  previewDelay=setTimeout(()=>{
   if(previewSurface!==surface)return;
   surface.querySelector('.project-image').append(hoverPreview);
-  hoverPreview.src=`assets/previews/${surface.dataset.id}.mp4`;
+  hoverPreview.src=`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-previews-hq-${surface.dataset.id}.mp4`;
   hoverPreview.play().catch(()=>{if(previewSurface===surface)stopPreview();});
  },180);
 }
