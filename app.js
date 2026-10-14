@@ -118,7 +118,7 @@ new MutationObserver(syncAmbient).observe(dialog,{attributes:true,attributeFilte
 const previewPointer=matchMedia('(any-hover: hover) and (any-pointer: fine)');
 const hoverPreview=document.createElement('video');
 hoverPreview.className='hover-preview';hoverPreview.muted=true;hoverPreview.defaultMuted=true;
-hoverPreview.playsInline=true;hoverPreview.preload='auto';hoverPreview.setAttribute('aria-hidden','true');hoverPreview.setAttribute('tabindex','-1');
+hoverPreview.playsInline=true;hoverPreview.loop=true;hoverPreview.preload='auto';hoverPreview.setAttribute('aria-hidden','true');hoverPreview.setAttribute('tabindex','-1');
 let previewSurface=null,previewDelay=null,previewGeneration=0;
 function stopPreview(resumeHero=true){
  previewGeneration++;hoverActive=false;
@@ -139,7 +139,6 @@ function startPreview(surface){
  },180);
 }
 hoverPreview.addEventListener('playing',()=>{if(hoverPreview.readyState>=2)previewSurface?.classList.add('previewing');});
-hoverPreview.addEventListener('ended',stopPreview);
 hoverPreview.addEventListener('error',()=>{if(hoverPreview.error)stopPreview();});
 document.querySelectorAll('.project').forEach(surface=>{
  surface.addEventListener('pointerenter',()=>startPreview(surface));
