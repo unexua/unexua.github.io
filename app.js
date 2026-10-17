@@ -6,7 +6,7 @@ const projects = [
  {id:'vozok',tags:['AI'],title:'Возок',category:'projection',format:'PROJECTION',year:'2026',team:'Meshsplash'},
  {id:'moskino',title:'Москино',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
  {id:'samosura',videoSrc:'media/samosura-restored.mp4',title:'Samosura',category:'dome',format:'FULLDOME',year:'2024',team:'Meshsplash',client:'Intervals 2024',behance:'https://www.behance.net/gallery/230852961/SAMOSURA'},
- {id:'bosideng',previewOnly:true,videoSrc:'media/bosideng-restored.mp4',tags:['AI'],title:'Bosideng',category:'projection',format:'PROJECTION',year:'2026',team:'Radugadesign × Meshsplash'},
+ {id:'bosideng',videoSrc:'media/bosideng-restored.mp4',tags:['AI'],title:'Bosideng',category:'projection',format:'PROJECTION',year:'2026',team:'Radugadesign × Meshsplash'},
  {id:'sevastopol',hidden:true,title:'Севастополь',category:'dome',format:'FULLDOME',year:'2026',team:'Meshsplash',previewOnly:true}
 ].filter(project=>!project.hidden);
 const contributions={
