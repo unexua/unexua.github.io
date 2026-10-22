@@ -20,7 +20,7 @@
   const status=document.getElementById('video-status');status.textContent=message;status.hidden=false;
  }
  function initialize(){
-  gl=canvas.getContext('webgl',{alpha:false,antialias:false,preserveDrawingBuffer:true});
+  gl=canvas.getContext('webgl',{alpha:false,antialias:false,preserveDrawingBuffer:false});
   if(!gl)return false;
   function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
   const vertex=shader(gl.VERTEX_SHADER,'attribute vec2 position;varying vec2 screen;void main(){screen=position;gl_Position=vec4(position,0.0,1.0);}');
@@ -52,10 +52,11 @@
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([0,0,0,255]));
   return true;
  }
+ function requestRender(){if(active&&!raf)raf=requestAnimationFrame(render);}
  function render(){
-  if(!active)return;
+  raf=0;if(!active)return;
   const dpr=Math.min(window.devicePixelRatio||1,2),w=Math.max(1,Math.round(canvas.clientWidth*dpr)),h=Math.max(1,Math.round(canvas.clientHeight*dpr));
-  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);viewDirty=true;}
+  if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h);viewDirty=true;requestRender();}
   if(!video.requestVideoFrameCallback&&!video.paused)textureDirty=true;
   if(textureDirty&&video.readyState>=2&&!video.seeking){
    try{gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.bindTexture(gl.TEXTURE_2D,texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video);}
@@ -67,14 +68,14 @@
    gl.drawArrays(gl.TRIANGLES,0,6);viewDirty=false;
    canvas.dataset.yaw=yaw;canvas.dataset.pitch=pitch;canvas.dataset.fov=fov;
   }
-  raf=requestAnimationFrame(render);
+  if(!video.requestVideoFrameCallback&&!video.paused)requestRender();
  }
  function watchFrames(){
   if(!active||!video.requestVideoFrameCallback)return;
-  frameCallback=video.requestVideoFrameCallback(()=>{textureDirty=true;watchFrames();});
+  frameCallback=video.requestVideoFrameCallback(()=>{textureDirty=true;requestRender();watchFrames();});
  }
  function setActive(enabled){
-  active=!!enabled;cancelAnimationFrame(raf);
+  active=!!enabled;cancelAnimationFrame(raf);raf=0;
   if(frameCallback!==null&&video.cancelVideoFrameCallback)video.cancelVideoFrameCallback(frameCallback);
   frameCallback=null;drag=null;
   panel.hidden=!active;video.classList.toggle('panorama-source',active);video.controls=!active;
@@ -85,11 +86,11 @@
   }else if(document.fullscreenElement===panel)document.exitFullscreen().catch(()=>{});
   return active;
  }
- function updateView(){pitch=Math.max(-1.48,Math.min(1.48,pitch));yaw%=Math.PI*2;viewDirty=true;}
+ function updateView(){pitch=Math.max(-1.48,Math.min(1.48,pitch));yaw%=Math.PI*2;viewDirty=true;requestRender();}
  canvas.addEventListener('pointerdown',e=>{if(e.button!==0)return;canvas.focus({preventScroll:true});canvas.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY};});
  canvas.addEventListener('pointermove',e=>{if(!drag)return;yaw+=(e.clientX-drag.x)*.004;pitch+=(e.clientY-drag.y)*.004;drag={x:e.clientX,y:e.clientY};updateView();});
  canvas.addEventListener('pointerup',()=>{drag=null;});canvas.addEventListener('pointercancel',()=>{drag=null;});
- canvas.addEventListener('wheel',e=>{e.preventDefault();fov=Math.max(35,Math.min(100,fov+e.deltaY*.04));viewDirty=true;},{passive:false});
+ canvas.addEventListener('wheel',e=>{e.preventDefault();fov=Math.max(35,Math.min(100,fov+e.deltaY*.04));viewDirty=true;requestRender();},{passive:false});
  canvas.addEventListener('keydown',e=>{
   if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key))return;
   e.preventDefault();e.stopPropagation();
@@ -100,11 +101,13 @@
  seek.addEventListener('input',()=>{if(Number.isFinite(video.duration))video.currentTime=Number(seek.value);});
  volume.addEventListener('input',()=>{video.volume=Number(volume.value);video.muted=video.volume===0;});
  mute.addEventListener('click',()=>{video.muted=!video.muted;});
- document.getElementById('panorama-reset').addEventListener('click',()=>{yaw=0;pitch=.85;fov=75;viewDirty=true;});
+ document.getElementById('panorama-reset').addEventListener('click',()=>{yaw=0;pitch=.85;fov=75;viewDirty=true;requestRender();});
  document.getElementById('panorama-fullscreen').addEventListener('click',()=>{if(document.fullscreenElement===panel)document.exitFullscreen().catch(()=>{});else panel.requestFullscreen().catch(()=>{});});
  for(const name of ['loadedmetadata','timeupdate','play','pause','ended','volumechange'])video.addEventListener(name,showState);
- for(const name of ['loadeddata','seeked'])video.addEventListener(name,()=>{textureDirty=true;});
+ for(const name of ['loadeddata','seeked'])video.addEventListener(name,()=>{textureDirty=true;requestRender();});
  video.addEventListener('waiting',()=>{if(active)loading.hidden=false;});video.addEventListener('playing',()=>{if(active)loading.hidden=true;});
  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();gl=null;fail('360°-просмотр прерван. Ролик доступен в обычном плеере.');});
+ new ResizeObserver(()=>{viewDirty=true;requestRender();}).observe(canvas);
+ video.addEventListener('play',requestRender);
  window.portfolioPanorama={setActive};
 })();

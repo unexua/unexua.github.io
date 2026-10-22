@@ -251,7 +251,7 @@ body{position:relative;isolation:isolate;min-height:100vh}
 
 /* A unique full-page texture; each local region fades without displacement. */
 
-.ambient-glitch .noise-region{inset:0;background:url('assets/copy-machine-06.webp') center/cover no-repeat;filter:contrast(4) brightness(.8);mask-size:100% 100%;mask-repeat:no-repeat;opacity:0;animation:noise-fade 22s ease-in-out infinite}
+.ambient-glitch .noise-region{inset:0;background:url('https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-v4-20261022-grain.webp') center/cover no-repeat;filter:none;mask-size:100% 100%;mask-repeat:no-repeat;opacity:0;animation:noise-fade 22s ease-in-out infinite}
 .ambient-glitch .noise-a{mask-image:url('assets/noise-cloud-a.svg?v=copy-machine');animation-delay:-7s}
 .ambient-glitch .noise-b{mask-image:url('assets/noise-cloud-b.svg?v=copy-machine');animation-delay:-15s;animation-duration:29s}
 .ambient-glitch .noise-c{mask-image:url('assets/noise-cloud-c.svg?v=copy-machine');animation-delay:-2s;animation-duration:33s}
@@ -292,7 +292,7 @@ body{background:#000;background-attachment:scroll}body:before{display:none}
 /* Responsive web assets; keep approved framing and animation. */
 .cover{--poster:var(--poster-large)}
 #video-status{padding:12px;font-size:14px;color:#eee}
-@media(max-width:800px){.cover{--poster:var(--poster-small)}.ambient-glitch .noise-region{background-image:url(assets/copy-machine-06-small.webp)}.glitch-slice,.reel-screen .glitch-slice{background-image:url(https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-poster.webp)}}
+@media(max-width:800px){.cover{--poster:var(--poster-small)}.ambient-glitch .noise-region{background-image:url(https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-v4-20261022-grain-small.webp)}.glitch-slice,.reel-screen .glitch-slice{background-image:url(https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-poster.webp)}}
 
 /* Case covers for projects without full playback. */
 #project-video[hidden],#project-placeholder[hidden]{display:none}
@@ -324,3 +324,5 @@ body{background:#000;background-attachment:scroll}body:before{display:none}
 /* Show the playing clip above the static cover, below card labels. */
 .project-image.cover .hover-preview{z-index:1}
 
+
+.project.preview-loading .cover-play::after{content:" …"}.project.previewing .hover-preview{opacity:1}

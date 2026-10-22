@@ -1,12 +1,12 @@
 const projects = [
- {id:'kizhi',previewOnly:true,title:'Кижи',category:'projection',format:'PROJECTION',year:'2026',team:'Sila Sveta'},
+ {id:'kizhi',title:'Кижи',category:'projection',format:'PROJECTION',year:'2026',team:'Sila Sveta'},
  {id:'coal',title:'История угля',category:'installation',format:'INSTALLATION',year:'2025',team:'Radugadesign × Meshsplash',behance:'https://www.behance.net/gallery/251910929/Museum-of-the-Siberian-Heat'},
  {id:'sovremennik',title:'Современник',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
  {id:'space-odyssey',title:'Space Odyssey',category:'dome',format:'FULLDOME',year:'2026',team:'Meshsplash',behance:'https://www.behance.net/gallery/248894075/PROJECT-RESONANCE'},
  {id:'vozok',tags:['AI'],title:'Возок',category:'projection',format:'PROJECTION',year:'2026',team:'Meshsplash'},
  {id:'moskino',title:'Москино',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
- {id:'samosura',videoSrc:'media/samosura-restored.mp4',title:'Samosura',category:'dome',format:'FULLDOME',year:'2024',team:'Meshsplash',client:'Intervals 2024',behance:'https://www.behance.net/gallery/230852961/SAMOSURA'},
- {id:'bosideng',videoSrc:'media/bosideng-restored.mp4',tags:['AI'],title:'Bosideng',category:'projection',format:'PROJECTION',year:'2026',team:'Radugadesign × Meshsplash'},
+ {id:'samosura',videoSrc:'https://storage.yandexcloud.net/unexua-portfolio-media/samosura-restored.mp4',title:'Samosura',category:'dome',format:'FULLDOME',year:'2024',team:'Meshsplash',client:'Intervals 2024',behance:'https://www.behance.net/gallery/230852961/SAMOSURA'},
+ {id:'bosideng',videoSrc:'https://storage.yandexcloud.net/unexua-portfolio-media/bosideng-restored.mp4',tags:['AI'],title:'Bosideng',category:'projection',format:'PROJECTION',year:'2026',team:'Radugadesign × Meshsplash'},
  {id:'sevastopol',hidden:true,title:'Севастополь',category:'dome',format:'FULLDOME',year:'2026',team:'Meshsplash',previewOnly:true}
 ].filter(project=>!project.hidden);
 const contributions={
@@ -21,7 +21,7 @@ const contributions={
  sevastopol:{role:'CG Generalist / CG Supervisor'}
 };
 projects.forEach(p=>{Object.assign(p,contributions[p.id]||{});p.videoSrc=`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-media-originals-${p.id}.mp4`;});
-const compactMedia=()=>matchMedia('(max-width: 800px)').matches||!!navigator.connection?.saveData||/^(slow-2g|2g|3g)$/.test(navigator.connection?.effectiveType||'');
+const compactMedia=()=>!!navigator.connection?.saveData||/^(slow-2g|2g|3g)$/.test(navigator.connection?.effectiveType||'')||(navigator.connection?.downlink>0&&navigator.connection.downlink<5);
 const coverDimensions={"sovremennik":{"height":1920,"width":3780},"vozok":{"height":2160,"width":3840},"kizhi":{"height":2048,"width":6824},"showreel":{"height":900,"width":1600},"bosideng":{"height":2350,"width":4000},"samosura":{"height":4096,"width":4096},"coal":{"height":1308,"width":1988},"space-odyssey":{"height":4096,"width":4096},"moskino":{"height":2160,"width":3660}};
 const grid=document.getElementById('project-grid');
 const coverNames={bosideng:'BOSIDENG',kizhi:'KIZHI',samosura:'SAMOSURA',sovremennik:'SOVREMENNIK',vozok:'VOZOK','space-odyssey':'SPACE ODYSSEY',moskino:'MOSKINO',coal:'HISTORY OF COAL',sevastopol:'SEVASTOPOL'};
@@ -30,9 +30,13 @@ grid.innerHTML=projects.map((p,i)=>`<article class="project" data-category="${p.
 const dialog=document.getElementById('project-dialog'),video=document.getElementById('project-video'),heroVideo=document.getElementById('hero-video'),motionToggle=document.getElementById('motion-toggle');
 const qualityControl=document.getElementById('video-quality'),qualitySelect=document.getElementById('video-quality-select');
 const showreelQualitySources={'2160-max':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-max.mp4','2160':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-4k.mp4','1080':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-1080.mp4','720':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-720.mp4'};
-let qualityChangeController=null,activeQualitySources={};
+let qualityChangeController=null,activeQualitySources={},activeChoices=[],activeAutoValue=null,qualityWaitTimer=null;
+function clearQualityWait(){clearTimeout(qualityWaitTimer);qualityWaitTimer=null;}
+function pickAutoValue(choices,id){const desired=['samosura','space-odyssey'].includes(id)?(compactMedia()?'1024':'2048'):(compactMedia()?'720':'1080');return choices.find(c=>c.value===desired)?.value||choices.find(c=>c.value!=='original'&&c.value!=='2160-max')?.value||choices[0]?.value;}
+function labelAuto(){const label=activeChoices.find(c=>c.value===activeAutoValue)?.label||'';if(qualitySelect.options[0]?.value==='auto')qualitySelect.options[0].textContent='Auto / '+label;}
+function lowerAutoQuality(){if(qualitySelect.value!=='auto')return false;const next={'1080':'720','2048':'1024','3840':'1080'}[activeAutoValue];if(!next||!activeQualitySources[next])return false;activeAutoValue=next;labelAuto();changeVideoSource(activeQualitySources[next]);return true;}
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-heroVideo.src=heroVideo.clientWidth*devicePixelRatio>1920?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-hero-master-2560.mp4':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-hero-master-1080.mp4';
+heroVideo.src=compactMedia()?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-v4-20261022-hero-720.mp4':(heroVideo.clientWidth*devicePixelRatio>1920&&navigator.connection?.downlink>=20?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-hero-master-2560.mp4':'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-v4-20261022-hero-1080.mp4');
 heroVideo.poster='https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-poster.webp';
 let activeId=null,lastTrigger=null,backgroundPaused=reduced.matches||!!navigator.connection?.saveData,heroVisible=true,hoverActive=false;
 function syncMotion(){motionToggle.setAttribute('aria-pressed',String(backgroundPaused));motionToggle.textContent=backgroundPaused?'PLAY ▶':'PAUSE Ⅱ';if(backgroundPaused||dialog.open||document.hidden||!heroVisible||hoverActive)heroVideo.pause();else heroVideo.play().catch(()=>{});}
@@ -45,18 +49,19 @@ function openProject(id,trigger,updateUrl=true){
  stopPreview();
  const p=id==='showreel'?{id:'showreel',title:'Showreel 2026',format:'CG / 3D MOTION',year:'2026',team:'Alexander Fedosov',videoSrc:showreelQualitySources['2160']}:projects.find(p=>p.id===id);
  if(!p)return;
- qualityChangeController?.abort();qualityChangeController=null;
+ clearQualityWait();qualityChangeController?.abort();qualityChangeController=null;
  const choices=p.previewOnly?[]:id==='showreel'?[{value:'2160',label:'4K / web',src:showreelQualitySources['2160']},{value:'2160-max',label:'4K / max quality',src:showreelQualitySources['2160-max']},{value:'1080',label:'1080p',src:showreelQualitySources['1080']},{value:'720',label:'720p',src:showreelQualitySources['720']}]:window.PORTFOLIO_VIDEO_QUALITIES?.[id]||[];
  activeQualitySources=Object.fromEntries(choices.map(choice=>[choice.value,choice.src]));
- qualitySelect.replaceChildren(...choices.map(choice=>new Option(choice.label,choice.value)));
+ activeChoices=choices;activeAutoValue=pickAutoValue(choices,id);
+ qualitySelect.replaceChildren(...(choices.length?[new Option('Auto','auto')]:[]),...choices.map(choice=>new Option(choice.label,choice.value)));
  qualityControl.hidden=p.previewOnly||choices.length<2;
- if(choices.length){qualitySelect.value=choices[0].value;p.videoSrc=choices[0].src;}
+ if(choices.length){qualitySelect.value='auto';labelAuto();p.videoSrc=activeQualitySources[activeAutoValue];}
  if(['space-odyssey','samosura'].includes(id))video.crossOrigin='anonymous';else video.removeAttribute('crossorigin');
  if(updateUrl&&location.hash!==`#project/${id}`)history.pushState(null,'',`#project/${id}`);
  activeId=id;if(trigger)lastTrigger=trigger;
  video.pause();video.removeAttribute('src');video.hidden=!!p.previewOnly;
  const placeholder=document.getElementById('project-placeholder');placeholder.hidden=!p.previewOnly;
- const poster=id==='kizhi'?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-cover-kizhi-native-master.webp':id==='showreel'?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-poster.webp':`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-cases-hq-${p.id}.webp`;
+ const poster=id==='showreel'?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-showreel-master-poster.webp':`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-cover-${p.id}${id==='kizhi'?'-master':''}-1600.webp`;
  if(p.previewOnly){placeholder.src=poster;placeholder.alt=`Обложка проекта ${p.title}`;}
  else{placeholder.removeAttribute('src');video.src=p.videoSrc||`https://storage.yandexcloud.net/unexua-portfolio-media/${p.id}.mp4`;video.poster=poster;}
  document.getElementById('video-status').hidden=true;video.load();
@@ -71,9 +76,9 @@ function openProject(id,trigger,updateUrl=true){
  if(!dialog.open){dialog.showModal();document.body.style.overflow='hidden';}heroVideo.pause();
  window.portfolioPanorama?.setActive(['space-odyssey','samosura'].includes(id));
 }
-qualitySelect.addEventListener('change',()=>{
- if(!dialog.open)return;
- const projectId=activeId,source=activeQualitySources[qualitySelect.value];if(!source)return;
+function changeVideoSource(source){
+ clearQualityWait();if(!dialog.open||!source)return;
+ const projectId=activeId;
  const position=qualityChangeController?.position??video.currentTime,wasPlaying=qualityChangeController?.wasPlaying??(!video.paused&&!video.ended),rate=qualityChangeController?.rate??video.playbackRate;
  qualityChangeController?.abort();
  const controller=new AbortController();controller.wasPlaying=wasPlaying;controller.position=position;controller.rate=rate;qualityChangeController=controller;
@@ -86,11 +91,44 @@ qualitySelect.addEventListener('change',()=>{
   if(target>.01){video.addEventListener('seeked',resume,{once:true,signal:controller.signal});video.currentTime=target;}else resume();
  },{once:true,signal:controller.signal});
  video.src=source;video.load();
+}
+qualitySelect.addEventListener('change',()=>{
+ clearQualityWait();
+ if(qualitySelect.value==='auto'){activeAutoValue=pickAutoValue(activeChoices,activeId);labelAuto();changeVideoSource(activeQualitySources[activeAutoValue]);}
+ else changeVideoSource(activeQualitySources[qualitySelect.value]);
 });
+video.addEventListener('waiting',()=>{
+ clearQualityWait();if(video.paused||video.seeking||!dialog.open)return;
+ const projectId=activeId;
+ qualityWaitTimer=setTimeout(()=>{
+  if(activeId!==projectId||!dialog.open||video.paused||video.seeking||video.readyState>=3)return;
+  if(!lowerAutoQuality()&&qualitySelect.value!=='auto'){
+   const status=document.getElementById('video-status');status.textContent='Видео буферизуется. Выберите Auto или меньшее качество.';status.hidden=false;
+  }
+ },3500);
+});
+video.addEventListener('playing',()=>{clearQualityWait();document.getElementById('video-status').hidden=true;});
+video.addEventListener('pause',clearQualityWait);
+video.addEventListener('seeking',clearQualityWait);
+let heroWaitTimer;
+heroVideo.addEventListener('waiting',()=>{
+ clearTimeout(heroWaitTimer);
+ heroWaitTimer=setTimeout(()=>{
+  if(heroVideo.paused||!heroVisible||dialog.open||document.hidden||hoverActive||heroVideo.readyState>=3)return;
+  const src=heroVideo.currentSrc;
+  const next=src.includes('2560')?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-v4-20261022-hero-1080.mp4':src.includes('hero-1080')?'https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-v4-20261022-hero-720.mp4':null;
+  if(!next)return;const time=heroVideo.currentTime;
+  heroVideo.addEventListener('loadedmetadata',()=>{heroVideo.currentTime=Math.min(time,heroVideo.duration-.05);syncMotion();},{once:true});
+  heroVideo.src=next;heroVideo.load();
+ },4000);
+});
+heroVideo.addEventListener('playing',()=>clearTimeout(heroWaitTimer));
+heroVideo.addEventListener('pause',()=>clearTimeout(heroWaitTimer));
+
 document.addEventListener('click',e=>{const trigger=e.target.closest('[data-open]');if(trigger)openProject(trigger.dataset.open,trigger);});
 document.querySelector('.close-dialog').addEventListener('click',()=>dialog.close());
 dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
-dialog.addEventListener('close',()=>{qualityChangeController?.abort();qualityChangeController=null;window.portfolioPanorama?.setActive(false);if(location.hash.startsWith('#project/'))history.replaceState(null,'','#work');video.pause();video.removeAttribute('src');video.load();document.body.style.overflow='';syncMotion();lastTrigger?.focus({preventScroll:true});});
+dialog.addEventListener('close',()=>{clearQualityWait();qualityChangeController?.abort();qualityChangeController=null;window.portfolioPanorama?.setActive(false);if(location.hash.startsWith('#project/'))history.replaceState(null,'','#work');video.pause();video.removeAttribute('src');video.load();document.body.style.overflow='';syncMotion();lastTrigger?.focus({preventScroll:true});});
 function stepProject(direction){const index=projects.findIndex(p=>p.id===activeId);if(index<0)return;openProject(projects[(index+direction+projects.length)%projects.length].id);}
 document.getElementById('previous-project').addEventListener('click',()=>stepProject(-1));
 document.getElementById('next-project').addEventListener('click',()=>stepProject(1));
@@ -114,18 +152,23 @@ document.addEventListener('visibilitychange',syncAmbient);
 dialog.addEventListener('close',syncAmbient);
 new MutationObserver(syncAmbient).observe(dialog,{attributes:true,attributeFilter:['open']});
 
-// One shared decoder; short, silent previews load only on deliberate hover/focus.
+// Keep a bounded cache of short silent loops; stale requests cannot cancel a new card.
 const previewPointer=matchMedia('(any-hover: hover) and (any-pointer: fine)');
-const hoverPreview=document.createElement('video');
-hoverPreview.className='hover-preview';hoverPreview.muted=true;hoverPreview.defaultMuted=true;
-hoverPreview.playsInline=true;hoverPreview.loop=true;hoverPreview.preload='auto';hoverPreview.setAttribute('aria-hidden','true');hoverPreview.setAttribute('tabindex','-1');
-let previewSurface=null,previewDelay=null,previewGeneration=0;
+const previewCache=new Map();
+let hoverPreview=null,previewSurface=null,previewDelay=null,previewGeneration=0;
+const previewSource=id=>`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-v4-20261022-preview-${id}.mp4`;
+function previewFor(id){
+ if(previewCache.has(id)){const item=previewCache.get(id);previewCache.delete(id);previewCache.set(id,item);return item;}
+ const clip=document.createElement('video');clip.className='hover-preview';clip.muted=true;clip.defaultMuted=true;clip.playsInline=true;clip.loop=true;clip.preload='metadata';clip.setAttribute('aria-hidden','true');clip.tabIndex=-1;clip.src=previewSource(id);
+ previewCache.set(id,clip);
+ while(previewCache.size>3){const key=[...previewCache.keys()].find(key=>previewCache.get(key)!==hoverPreview&&key!==id);if(!key)break;const old=previewCache.get(key);old.pause();old.removeAttribute('src');old.load();old.remove();previewCache.delete(key);}
+ return clip;
+}
 function stopPreview(resumeHero=true){
- previewGeneration++;hoverActive=false;
- clearTimeout(previewDelay);previewDelay=null;
- previewSurface?.classList.remove('previewing');previewSurface=null;
- hoverPreview.pause();hoverPreview.removeAttribute('src');hoverPreview.load();hoverPreview.remove();
- if(resumeHero)syncMotion();
+ previewGeneration++;hoverActive=false;clearTimeout(previewDelay);previewDelay=null;
+ previewSurface?.classList.remove('previewing','preview-loading');previewSurface=null;
+ if(hoverPreview){hoverPreview.pause();hoverPreview.remove();}
+ hoverPreview=null;if(resumeHero)syncMotion();
 }
 function startPreview(surface){
  if(navigator.connection?.saveData||!previewPointer.matches||dialog.open||document.hidden||previewSurface===surface)return;
@@ -133,13 +176,14 @@ function startPreview(surface){
  const generation=previewGeneration;
  previewDelay=setTimeout(()=>{
   if(previewSurface!==surface||generation!==previewGeneration)return;
-  surface.querySelector('.project-image').append(hoverPreview);
-  hoverPreview.src=`https://storage.yandexcloud.net/unexua-portfolio-media/20261012-opt-preview-${surface.dataset.id}${surface.dataset.id==='kizhi'?'-master':''}.mp4`;
-  hoverPreview.play().catch(()=>{if(previewSurface===surface&&generation===previewGeneration)stopPreview();});
+  const clip=previewFor(surface.dataset.id);hoverPreview=clip;surface.classList.add('preview-loading');surface.querySelector('.project-image').append(clip);
+  const show=()=>{if(previewSurface!==surface||generation!==previewGeneration||hoverPreview!==clip)return;surface.classList.remove('preview-loading');surface.classList.add('previewing');
+   if(!compactMedia()&&navigator.connection?.downlink>=8){const index=projects.findIndex(p=>p.id===surface.dataset.id);const next=projects[(index+1)%projects.length];if(next&&!previewCache.has(next.id))previewFor(next.id);}
+  };
+  clip.addEventListener('playing',show,{once:true});
+  clip.play().then(show).catch(()=>{if(previewSurface===surface&&generation===previewGeneration)stopPreview();});
  },180);
 }
-hoverPreview.addEventListener('playing',()=>{if(hoverPreview.readyState>=2)previewSurface?.classList.add('previewing');});
-hoverPreview.addEventListener('error',()=>{if(hoverPreview.error)stopPreview();});
 document.querySelectorAll('.project').forEach(surface=>{
  surface.addEventListener('pointerenter',()=>startPreview(surface));
  surface.addEventListener('pointerleave',()=>{if(previewSurface===surface)stopPreview();});
@@ -147,10 +191,8 @@ document.querySelectorAll('.project').forEach(surface=>{
  surface.addEventListener('focusout',e=>{if(!surface.contains(e.relatedTarget)&&previewSurface===surface)stopPreview();});
 });
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stopPreview();});
-// Deliberate hover previews remain available; reduced motion still pauses ambient effects.
-document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',stopPreview));
-
-video.addEventListener('error',()=>{const status=document.getElementById('video-status');status.textContent='Не удалось загрузить видео. Проверь соединение и открой проект ещё раз.';status.hidden=false;});
+document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>stopPreview()));
+video.addEventListener('error',()=>{if(video.error&&dialog.open){if(lowerAutoQuality())return;const status=document.getElementById('video-status');status.textContent='Не удалось загрузить видео. Выберите другое качество или откройте проект ещё раз.';status.hidden=false;}});
 
 // Project URLs remain local in the sandbox and use the same routes when published.
 function syncProjectRoute(){
