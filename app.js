@@ -1,11 +1,11 @@
 const projects = [
  {id:'kizhi',title:'Кижи',category:'projection',format:'PROJECTION',year:'2026',team:'Sila Sveta'},
  {id:'coal',title:'История угля',category:'installation',format:'INSTALLATION',year:'2025',team:'Radugadesign × Meshsplash',behance:'https://www.behance.net/gallery/251910929/Museum-of-the-Siberian-Heat'},
- {id:'sovremennik',title:'Современник',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
- {id:'space-odyssey',title:'Space Odyssey',category:'dome',format:'FULLDOME',year:'2026',team:'Meshsplash',behance:'https://www.behance.net/gallery/248894075/PROJECT-RESONANCE'},
- {id:'vozok',tags:['AI'],title:'Возок',category:'projection',format:'PROJECTION',year:'2026',team:'Meshsplash'},
  {id:'moskino',title:'Москино',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
  {id:'samosura',videoSrc:'https://storage.yandexcloud.net/unexua-portfolio-media/samosura-restored.mp4',title:'Samosura',category:'dome',format:'FULLDOME',year:'2024',team:'Meshsplash',client:'Intervals 2024',behance:'https://www.behance.net/gallery/230852961/SAMOSURA'},
+ {id:'vozok',tags:['AI'],title:'Возок',category:'projection',format:'PROJECTION',year:'2026',team:'Meshsplash'},
+ {id:'sovremennik',title:'Современник',category:'projection',format:'PROJECTION',year:'2025',team:'Dreamlaser × Meshsplash'},
+ {id:'space-odyssey',title:'Space Odyssey',category:'dome',format:'FULLDOME',year:'2026',team:'Meshsplash',behance:'https://www.behance.net/gallery/248894075/PROJECT-RESONANCE'},
  {id:'bosideng',videoSrc:'https://storage.yandexcloud.net/unexua-portfolio-media/bosideng-restored.mp4',tags:['AI'],title:'Bosideng',category:'projection',format:'PROJECTION',year:'2026',team:'Radugadesign × Meshsplash'},
  {id:'sevastopol',hidden:true,title:'Севастополь',category:'dome',format:'FULLDOME',year:'2026',team:'Meshsplash',previewOnly:true}
 ].filter(project=>!project.hidden);
